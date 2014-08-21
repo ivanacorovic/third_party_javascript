@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Publisher Test Page</title>
+  </head>
+  <body>
+    <h1>Publisher Test Page</h1>
+ <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <script data-stork-widget>
+      var Stork = window.Stork || {};
+        (function() {
+          var script = document.createElement('script');
+          script.src = 'http://widget.dev/widget/widget.js';
+          script.async = true;
+          var entry = document.getElementsByTagName('script')[0];
+          entry.parentNode.insertBefore(script, entry);
+
+        })();
+      
+    </script> 
+    <div data-stork-product="1335"></div>
+    <div data-stork-product="1234"></div>
+    <div id = "message"></div>
+
+  </body>
+</html>

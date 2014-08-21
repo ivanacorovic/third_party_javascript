@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+       <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script> 
+      <title>Widget Test Page</title>
+    </head>
+    <body>
+      <h1>Widget Test Page</h1>
+      <iframe id="my-iframe" src="http://publisher.dev/publisher/publish.html" width="500" height="400">
+      </iframe>
+      <p>
+        <button id="send">Send Message</button>
+      </p>
+
+     <script>
+      window.onload = function() {
+        var frame = document.getElementById('my-iframe').contentWindow;
+
+        var btn = document.getElementById('send');
+        function sendMessage(e) {
+          e.preventDefault();
+          frame.postMessage('hello', '*');
+        }
+        btn.addEventListener('click', sendMessage);
+      }
+
+
+     </script>
+   </body>
+</html>
