@@ -54,35 +54,20 @@ var Stork = (function(window, undefined) {
   loadScript("http://widget.dev/widget/catalog.js", loadSupportingFiles);
   loadStylesheet("http://widget.dev/widget/style.css");
 
+
+
+
   window.onload = function() {
-    var messageEle = document.getElementById('message');
+    var frame = document.getElementById('my-iframe').contentWindow;
 
-    function receiver(ev) {
-      alert("receiver");
-      if (ev.origin !== 'http://widget.dev') {
-        alert("wrong origin");
-        return;
-      }
-      alert(ev.data);
-
-      if (ev.data === 'hello') {      
-         messageEle.innerHTML = "Message Received: " + ev.data;
-        alert("if");
-      }
-      else {
-        alert("nista");
-      }
-      return;
+    var btn = document.getElementById('send');
+    function sendMessage(e) {
+      e.preventDefault();
+      frame.postMessage('hello', 'http://widget.dev');
     }
-    
-    if (window.addEventListener) {
-      window.addEventListener('message', receiver, false);
-      alert("added");
-    } 
-    else {
-      window.attachEvent('onmessage', receiver);
-    }
+    btn.addEventListener('click', sendMessage);
   }
+
 
   return Stork;
 })(window);
