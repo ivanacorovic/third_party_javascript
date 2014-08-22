@@ -2,6 +2,7 @@
   <html>
     <head>
        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script> 
+       <script type="text/javascript" src="http://widget.dev/easyXDM.min.js"></script>
       <title>Widget Test Page</title>
     </head>
     <body>
@@ -31,11 +32,19 @@
         
         if (window.addEventListener) {
           window.addEventListener('message', receiver, false);
-          alert("added");
         } 
         else {
           window.attachEvent('onmessage', receiver);
         }
     }
+
+      var socket = new easyXDM.Socket({
+        onMessage: function (message, origin) {
+          alert(message);
+        }
+      });
+
+    socket.postMessage("Hello, World!");
+
    </script>
 </html>

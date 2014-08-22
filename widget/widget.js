@@ -68,6 +68,13 @@ var Stork = (function(window, undefined) {
     btn.addEventListener('click', sendMessage);
   }
 
+  var socket = new easyXDM.Socket({
+    remote: "http://widget.dev/widget/index.html",
+    onMessage: function (message, origin) {
+      alert(message);
+    }
+  });
+  socket.postMessage("Hello, World!");
 
   return Stork;
 })(window);
