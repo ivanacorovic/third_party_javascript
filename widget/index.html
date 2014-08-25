@@ -14,18 +14,15 @@
         var messageEle = document.getElementById('message');
 
         function receiver(ev) {
-          alert("receiver");
           if (ev.origin !== 'http://publisher.dev') {
-            alert("wrong origin");
             return;
           }
 
           if (ev.data === 'hello') {      
              messageEle.innerHTML = "Message Received: " + ev.data;
-            alert("if");
           }
           else {
-            alert("nista");
+
           }
           return;
         }

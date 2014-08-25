@@ -71,7 +71,6 @@ var Stork = (function(window, undefined) {
   var socket = new easyXDM.Socket({
     remote: "http://widget.dev/widget/index.html",
     onMessage: function (message, origin) {
-      alert(message);
     }
   });
   socket.postMessage("Hello, World!");
