@@ -1,79 +1,114 @@
-var Stork = (function(window, undefined) {
+function loadSupportingFiles (){  
+  loadScript("http://localhost:3000/products/5.jsonp?callback=parseProduct", undefined);
+}
 
-  function getWidgetParams() {
-    return Stork;
+function loadStylesheet(url) {
+  var link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.href = url;
+  var entry = document.getElementsByTagName('script')[1];
+  entry.parentNode.insertBefore(link, entry);
+}
+
+
+function loadScript(url, callback) {
+  var script = document.createElement('script');
+  script.async = true;
+  script.src = url;
+  var entry = document.getElementsByTagName('script')[1];
+  entry.parentNode.insertBefore(script, entry);
+  script.onload = script.onreadystatechange = function() {
+    var rdyState = script.readyState;
+    if (!rdyState || /complete|loaded/.test(script.readyState)) {
+      callback();
+      script.onload = null;
+      script.onreadystatechange = null;
+    }
+  }
+}
+
+function appendWidgetMarkup(params) {
+  jQuery('[data-stork-product]').each(function() {
+    var location = jQuery(this);
+    var id = location.attr('data-stork-product');
+
+    location.removeAttr('data-stork-product'); 
+    var html = 
+      '<div class = "stork-container">' +
+      '<h3>' + params.catalog[id].name + '</h3>' +
+      '<p>' + params.catalog[id].company + '</p>' +
+      '<p>' + params.catalog[id].price + '</p>' +
+      '</div>';
+    location.append(html);
+    });
   }
 
-  function loadSupportingFiles (){  
-    var params = getWidgetParams();
-    appendWidgetMarkup(params);
+loadStylesheet("http://widget.dev/widget/nutritionLabel.css");
+loadScript("http://widget.dev/widget/nutritionLabel.js", loadSupportingFiles);
+
+function Ingredients(data){
+    var i;
+    var names = '';
+    for(i = 0; i < data.length-1; i++) {
+      names = names + data[i].name;
+      names = names + ', ';
+    }
+    names = names + data[i].name;
+    return names;
   }
 
-  function loadStylesheet(url) {
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = url;
-    var entry = document.getElementsByTagName('script')[0];
-    entry.parentNode.insertBefore(link, entry);
-  }
-
-
-  function loadScript(url, callback) {
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = url;
-    var entry = document.getElementsByTagName('script')[0];
-    entry.parentNode.insertBefore(script, entry);
-    script.onload = script.onreadystatechange = function() {
-      var rdyState = script.readyState;
-      if (!rdyState || /complete|loaded/.test(script.readyState)) {
-        callback();
-        script.onload = null;
-        script.onreadystatechange = null;
+  function valueCalories(data){
+    var i;
+    var result = '';
+    for(i = 0; i < data.length; i++) {
+      if (data[i].amount){
+        if (data[i].name == 'Energetska vrijednost') {
+          result = data[i].amount;
+        }
       }
     }
+    return result;
   }
 
-  function appendWidgetMarkup(params) {
-    jQuery('[data-stork-product]').each(function() {
-      var location = jQuery(this);
-      var id = location.attr('data-stork-product');
-
-      location.removeAttr('data-stork-product'); 
-      var html = 
-        '<div class = "stork-container">' +
-        '<h3>' + params.catalog[id].name + '</h3>' +
-        '<p>' + params.catalog[id].company + '</p>' +
-        '<p>' + params.catalog[id].price + '</p>' +
-        '</div>';
-      location.append(html);
-      });
+  function valueSatFat(data){
+    var i;
+    var result = '';
+    for(i = 0; i < data.length; i++) {
+      if (data[i].amount){
+        if (data[i].name == 'Zasićene masti') {
+          result = data[i].amount;
+        }
+      }
     }
-
-  loadScript("http://widget.dev/widget/catalog.js", loadSupportingFiles);
-  loadStylesheet("http://widget.dev/widget/style.css");
-
-
-
-
-  window.onload = function() {
-    var frame = document.getElementById('my-iframe').contentWindow;
-
-    var btn = document.getElementById('send');
-    function sendMessage(e) {
-      e.preventDefault();
-      frame.postMessage('hello', 'http://widget.dev');
-    }
-    btn.addEventListener('click', sendMessage);
+    return result;
   }
 
-  var socket = new easyXDM.Socket({
-    remote: "http://widget.dev/widget/index.html",
-    onMessage: function (message, origin) {
-    }
-  });
-  socket.postMessage("Hello, World!");
+  function parseProduct(json) {
+    var product = json;
+    var ingredients = product.ingredients;
+    var nutrients = product.product_nutrients;
+    var i;
 
-  return Stork;
-})(window);
+ $('#test1').nutritionLabel({
+    'hideTextboxArrows' : true,
+      'showItemName' : false,
+      'showServingsPerContainer' : false,
+      'showServingUnitQuantity' : false,
+      'ingredientList' : Ingredients(ingredients),
+      'showSodium' : false,
+      'showCholesterol' : false,
+      'showPolyFat' : true,
+      'showMonoFat' : true,
+      'showFibers' : true,
+      'showTransFat' : true,
+      'showVitaminA' : false,
+      'showVitaminC' : false,
+      'showCalcium' : false,
+      'showIron' : false,
+      'valueCalories': valueCalories(nutrients),
+      'valueSatFat': valueSatFat(nutrients)
+       
+ });
+  
+  }
