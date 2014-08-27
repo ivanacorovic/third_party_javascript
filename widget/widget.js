@@ -29,9 +29,9 @@ function loadScript(url, callback) {
 }
 
 function appendWidgetMarkup(params) {
-  jQuery('[data-stork-product]').each(function() {
+  jQuery('[data-product]').each(function() {
     var location = jQuery(this);
-    var id = location.attr('data-stork-product');
+    var id = location.attr('data-product');
 
     location.removeAttr('data-stork-product'); 
     var html = 
@@ -58,57 +58,78 @@ function Ingredients(data){
     return names;
   }
 
-  function valueCalories(data){
-    var i;
-    var result = '';
-    for(i = 0; i < data.length; i++) {
-      if (data[i].amount){
-        if (data[i].name == 'Energetska vrijednost') {
-          result = data[i].amount;
-        }
-      }
-    }
-    return result;
-  }
-
-  function valueSatFat(data){
-    var i;
-    var result = '';
-    for(i = 0; i < data.length; i++) {
-      if (data[i].amount){
-        if (data[i].name == 'Zasićene masti') {
-          result = data[i].amount;
-        }
-      }
-    }
-    return result;
-  }
-
   function parseProduct(json) {
     var product = json;
     var ingredients = product.ingredients;
     var nutrients = product.product_nutrients;
     var i;
+    var valueCalories, valueFatCalories, valueTotalFat, valueSatFat, valueTransFat, valueMonoFat;
+    var valuePolyFat, valueTotalCarb, valueSugars, valueFibers, valueProteins;
 
- $('#test1').nutritionLabel({
-    'hideTextboxArrows' : true,
-      'showItemName' : false,
-      'showServingsPerContainer' : false,
-      'showServingUnitQuantity' : false,
-      'ingredientList' : Ingredients(ingredients),
-      'showSodium' : false,
-      'showCholesterol' : false,
-      'showPolyFat' : true,
-      'showMonoFat' : true,
-      'showFibers' : true,
-      'showTransFat' : true,
-      'showVitaminA' : false,
-      'showVitaminC' : false,
-      'showCalcium' : false,
-      'showIron' : false,
-      'valueCalories': valueCalories(nutrients),
-      'valueSatFat': valueSatFat(nutrients)
-       
- });
-  
+    for(i = 0; i < nutrients.length; i++) {
+      if (nutrients[i].amount) {
+        switch(nutrients[i].name) {
+          case "Energetska vrijednost":
+            valueCalories = nutrients[i].amount;
+            break;
+          case "Masti":
+            valueFatCalories = nutrients[i].amount*9;
+            valueTotalFat = nutrients[i].amount;
+            break;
+          case "Zasićene masti":
+            valueSatFat =  nutrients[i].amount;
+            break;
+          case "Omega-3 masne kisjeline":
+            valueTransFat = nutrients[i].amount;
+            break;
+          case "Jednostruko nezasićene masne kisjeline":
+            valueMonoFat = nutrients[i].amount;
+            break;
+          case "Višestruko nezasićene masne kisjeline":
+            valuePolyFat = nutrients[i].amount;
+            break;
+          case "Ugljeni hidrati":
+            valueTotalCarb = nutrients[i].amount;
+            break;
+          case "Šećeri":
+            valueSugars = nutrients[i].amount;
+            break;
+          case "Vlakna":
+            valueFibers = nutrients[i].amount;
+            break;
+          case "Proteini":
+            valueProteins = nutrients[i].amount;
+            break;
+        }
+      }
+    }
+
+    $('#test1').nutritionLabel({
+      'hideTextboxArrows' : true,
+        'showItemName' : false,
+        'showServingsPerContainer' : false,
+        'showServingUnitQuantity' : false,
+        'ingredientList' : Ingredients(ingredients),
+        'showSodium' : false,
+        'showCholesterol' : false,
+        'showPolyFat' : true,
+        'showMonoFat' : true,
+        'showFibers' : true,
+        'showTransFat' : true,
+        'showVitaminA' : false,
+        'showVitaminC' : false,
+        'showCalcium' : false,
+        'showIron' : false,
+        'valueCalories': valueCalories,
+        'valueFatCalories': valueFatCalories,
+        'valueTotalFat': valueTotalFat,
+        'valueSatFat': valueSatFat,
+        'valueTransFat': valueTransFat,
+        'valueMonoFat': valueMonoFat,
+        'valuePolyFat': valuePolyFat,
+        'valueTotalCarb': valueTotalCarb,
+        'valueSugars': valueSugars,
+        'valueFibers': valueFibers,
+        'valueProteins': valueProteins     
+    });
   }
