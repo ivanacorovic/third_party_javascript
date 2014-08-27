@@ -7,9 +7,15 @@
   <body>
 
     <h1>Publisher Test Page</h1>
+    <div data-ideus-product= "5"  id = "test1"></div>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="http://widget.dev/widget/widget.js"></script>
-    <div data-product= 5 id = 'test1'></div>
+    <script>
+      var script = document.createElement('script');
+      script.async = true;
+      script.src = "http://localhost:3000/ideus-widget/nutrition_widget.js";
+      $("body").append(script);
+    </script>
+
 
   </body>
 </html>
